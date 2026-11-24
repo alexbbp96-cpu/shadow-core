@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Налоговый калькулятор</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input { margin: 10px 0; padding: 5px; width: 200px; }
+    button { padding: 6px 12px; }
+    table { border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: right; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+
+<h2>Налоговый калькулятор (декады)</h2>
+<label>Доход: <input id="income" type="number" value="100000"></label>
+<button onclick="run()">Рассчитать</button>
+
+<div id="result"></div>
+
+<script>
+function computeTax(incomeRaw) {
+  const income = Math.max(0, Number(incomeRaw) || 0);
+  let steps = [];
+  let totalTax = 0;
+
+  for (let n = 0; n < 8; n++) {
+    const base = 10 * 10 ** n;
+    const step = 1 * 10 ** n;
+    const wrap = 50 * 10 ** n;
+
+    if (income <= base) continue;
+
+    // уровни 10%..49% (40 штук по step)
+    for (let i = 0; i < 40; i++) {
+      const lower = base + i * step;
+      const upper = lower + step;
+      if (income <= lower) break;
+
+      const rate = (10 + i) / 100;
+      const taxable = Math.min(income, upper) - lower;
+      const tax = taxable * rate;
+      totalTax += tax;
+      steps.push({rate, lower, upper, taxable, tax});
+
+      if (income <= upper) return { income, totalTax, steps };
+    }
+
+    // финальный уровень 50% (растянутый)
+    const lower = base + 40 * step;  // начало уровня 50%
+    const upper = lower + wrap;      // конец декады
+    if (income > lower) {
+      const rate = 0.50;
+      const taxable = Math.min(income, upper) - lower;
+      const tax = taxable * rate;
+      totalTax += tax;
+      steps.push({rate, lower, upper, taxable, tax});
+
+      if (income <= upper) return { income, totalTax, steps };
+    }
+  }
+
+  return { income, totalTax, steps };
+}
+
+function run() {
+  const val = document.getElementById("income").value;
+  const result = computeTax(val);
+
+  let html = `<h3>
+    Доход: ${result.income.toLocaleString("ru-RU")}<br>
+    Итоговый налог: ${result.totalTax.toFixed(2)}<br>
+    Эффективная ставка: ${(result.totalTax / result.income * 100).toFixed(2)}%
+  </h3>`;
+
+  html += `<table>
+    <tr><th>Диапазон</th><th>Ставка</th><th>Облагаемая сумма</th><th>Налог</th></tr>`;
+
+  result.steps.forEach(s => {
+    html += `<tr>
+      <td>${s.lower.toLocaleString("ru-RU")} – ${s.upper.toLocaleString("ru-RU")}</td>
+      <td>${(s.rate * 100).toFixed(0)}%</td>
+      <td>${s.taxable.toLocaleString("ru-RU")}</td>
+      <td>${s.tax.toFixed(2)}</td>
+    </tr>`;
+  });
+
+  html += `<table>
+  <tr><th>Диапазон</th><th>Ставка</th></tr>`;
+
+
+  document.getElementById("result").innerHTML = html;
+}
+</script>
+</body>
+</html>
