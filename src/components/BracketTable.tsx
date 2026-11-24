@@ -203,7 +203,7 @@ export function BracketTable({result, onSelectMilestone}: BracketTableProps) {
                     <span className="text-xs text-rose-700">Свыше Ц12</span>
                   </td>
                   <td className="py-2.5 px-4 font-mono text-xs tabular-nums whitespace-nowrap text-slate-800">
-                    > {formatIntegerBound(result.steps[result.steps.length - 1].upper)}c
+                    {'>'} {formatIntegerBound(result.steps[result.steps.length - 1].upper)}c
                   </td>
                   <td className="py-2.5 px-4 text-right whitespace-nowrap">
                     <span className="inline-block px-2 py-0.5 text-xs font-mono font-medium rounded border tabular-nums text-rose-700 bg-rose-50 border-rose-200">
