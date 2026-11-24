@@ -1,0 +1,4 @@
+[
+  {"source":"manual-test","externalId":"shadow-demo-0001","direction":"inbound","amountMinor":12500,"currency":"ILS","occurredAt":"2026-11-24T08:00:00.000Z","counterparty":"Synthetic test counterparty","description":"Synthetic test only; not a real payment"},
+  {"source":"manual-test","externalId":"shadow-demo-0002","direction":"outbound","amountMinor":9800,"currency":"ILS","occurredAt":"2026-11-24T08:05:00.000Z","description":"Synthetic test missing counterparty; should require review"}
+]
