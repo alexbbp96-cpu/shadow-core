@@ -1,0 +1,6 @@
+{
+  "name": "TAX-BOT PRO",
+  "description": "Прогрессивный налоговый калькулятор TAX-BOT PRO (11%–34% × 12 циклов) с построчным расчётом вычетов и анализом шкалы.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
